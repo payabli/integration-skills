@@ -1,0 +1,36 @@
+name: Validate skills
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - "tools/check-doc-links.sh"
+      - ".github/workflows/skill-validator.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      # Pinned to a released tag for reproducibility + supply-chain safety — bump intentionally.
+      - name: Install skill-validator
+        run: |
+          go install github.com/agent-ecosystem/skill-validator/cmd/skill-validator@v1.5.6
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      # Structural gate: frontmatter, required fields, spec conformance, token limits.
+      # No LLM-judge / AI scoring — that stays a manual step (see CONTRIBUTING.md).
+      - name: Validate skill structure
+        run: skill-validator validate structure --strict --emit-annotations skills/
+
+      # Resilient doc-link check: .md with HTML fallback on cold-render (see the script).
+      - name: Check documentation links
+        run: ./tools/check-doc-links.sh

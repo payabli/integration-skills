@@ -1,0 +1,9 @@
+{
+  "name": "payabli-integrations",
+  "description": "Agent Skills for integrating with Payabli — Pay In, Pay Out, webhooks, tokenization, subscriptions, and more. Ships Payabli-specific procedural knowledge into your coding agent.",
+  "author": { "name": "Payabli" },
+  "homepage": "https://docs.payabli.com",
+  "repository": "https://github.com/payabli/integration-skills",
+  "license": "MIT",
+  "keywords": ["payabli", "payments", "integration", "fintech", "embedded-payments"]
+}

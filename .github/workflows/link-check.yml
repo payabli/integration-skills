@@ -1,0 +1,43 @@
+name: Monthly link check
+
+# Sweeps every outbound link in the repo — docs.payabli.com pages plus the external
+# install-instruction links (GitHub, Gemini CLI, Cursor, skills.sh) — and opens an issue
+# if anything has rotted. Runs on a schedule and on demand. This is intentionally separate
+# from the per-PR validator: external hosts can flake, and that must not fail skill PRs.
+
+on:
+  schedule:
+    - cron: "0 9 1 * *"   # 09:00 UTC on the 1st of each month
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check all links (including external)
+        run: |
+          set -o pipefail
+          bash tools/check-doc-links.sh --all 2>&1 | tee link-check-report.txt
+
+      - name: Open an issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo "The monthly link check found broken or stale links."
+            echo "Reproduce locally with: \`bash tools/check-doc-links.sh --all\`"
+            echo
+            echo '```'
+            cat link-check-report.txt
+            echo '```'
+          } > body.md
+          gh issue create \
+            --title "Link check failed ($(date -u +%Y-%m-%d))" \
+            --body-file body.md

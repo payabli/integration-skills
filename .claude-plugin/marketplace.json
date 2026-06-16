@@ -1,0 +1,12 @@
+{
+  "name": "payabli",
+  "owner": { "name": "Payabli" },
+  "description": "Official Payabli Agent Skills for integrating Payabli into your application from your coding agent.",
+  "plugins": [
+    {
+      "name": "payabli-integrations",
+      "source": "./",
+      "description": "Agent Skills for integrating with Payabli — Pay In, Pay Out, webhooks, tokenization, subscriptions, and more."
+    }
+  ]
+}

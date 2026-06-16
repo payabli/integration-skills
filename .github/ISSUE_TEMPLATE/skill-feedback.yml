@@ -1,0 +1,54 @@
+name: Skill feedback
+description: Something a Payabli skill got wrong — a bad recommendation, missing scenario, or factual error. (Not for integration support.)
+title: "[skill feedback]: "
+labels: ["skill-feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the Payabli integration skills! Use this when a skill **recommended something wrong or out of date**. Issues here are triaged about **once a week** — this isn't an integration support channel.
+
+        **Have an integration question or problem?** Don't file it here — contact your **Payabli integration contact**.
+
+        **Don't paste secrets** (API keys, tokens, cardholder data) into this issue.
+  - type: input
+    id: skill
+    attributes:
+      label: Which skill?
+      description: The skill directory name (e.g. `payabli-accept-payments`). List several if it spans more than one, or "not sure".
+      placeholder: payabli-accept-payments
+    validations:
+      required: true
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Which coding agent?
+      options:
+        - Claude Code
+        - Cursor
+        - Codex CLI
+        - GitHub Copilot
+        - Other / multiple
+    validations:
+      required: true
+  - type: textarea
+    id: expected-vs-actual
+    attributes:
+      label: What did the skill recommend, and what did you expect?
+      description: What the agent did with the skill loaded, and what the correct behavior should have been.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Repro / context
+      description: What you were building, the prompt you used, and any error messages or API responses (with secrets removed).
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Skill version / install date (optional)
+      description: A commit SHA or roughly when you installed the skills, if you know it.
+    validations:
+      required: false
