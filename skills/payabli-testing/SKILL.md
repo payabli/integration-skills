@@ -33,9 +33,12 @@ Use Payabli's published test cards and test bank accounts — including cards th
 
 Most of sandbox is self-serve, but a few things **can't be triggered on your own** — you have to ask your Payabli contact to fire them. This trips up integrators constantly, so plan for it: build and verify everything self-serve first, then batch the Payabli-side triggers with your contact rather than getting blocked mid-test.
 
-- **Some webhook events** — payment-event webhooks (for example `ApprovedPayment`) fire when you run the transaction, but chargebacks, ACH returns, and similar events require Payabli to trigger them.
+- **Some webhook events** — payment-event webhooks (for example `ApprovedPayment`) fire when you run the transaction, but some events won't fire on their own.
+- **ACH returns** — not self-service. Send your Payabli Solution Engineer the ACH transaction IDs you want turned into returns.
 - **Some transaction-status transitions** — a transaction won't always advance through its lifecycle on its own.
 - **Funding triggers** — advancing to settled/funded. This gates anything settlement-dependent, most commonly **refunds** (which need a settled transaction).
+
+Card chargebacks, by contrast, are self-service: settle a card transaction first, then import it as a dispute from the Payabli Portal (Pay In reports). The import moves the transaction into a chargeback and fires the chargeback-received webhook; handle the dispute after that with `payabli-disputes`.
 
 https://docs.payabli.com/developers/platform-developer-testing-guide.md
 
