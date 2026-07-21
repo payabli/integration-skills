@@ -40,10 +40,14 @@ Default to sandbox until the integration is certified. Record the choice in `pay
 
 ## Authentication
 
-- Send the API token in the **`requestToken`** header on every request. Payabli does not use `Authorization: Bearer`.
-- Never hardcode or commit tokens. Read them from environment variables or a secrets store.
-- **Private vs. public tokens.** A **private** token is for server-side API calls — keep it secret; never put it in client-side code, a bundled env var, or a committed file. A **public** token is publicly readable and used only to mount embedded components in the browser (see `payabli-accept-payments`). Don't send a private token to the browser.
-- Token types, scopes, and management: https://docs.payabli.com/developers/api-reference/api-overview.md
+Payabli supports two authentication methods. New integrations should use **OAuth2**. Never hardcode or commit credentials for either — read them from environment variables or a secrets store.
+
+- **OAuth2 (Bearer) — recommended.** Exchange a Client ID/Secret at `POST /api/v2/Token/serverside` for a short-lived Bearer access token, then send it as `Authorization: Bearer <token>`. The token's lifetime comes back in `expires_in`; when it expires the API returns `401` — re-request a new token with the same credentials and retry. The credentials have a configurable lifetime and support secret rotation, giving short-lived, permission-scoped access. Some endpoints accept only OAuth2.
+- **API token (`requestToken`).** A long-lived API token sent in the **`requestToken`** header. Suits minimal-setup and existing integrations. It coexists with OAuth2, so an existing integration need not migrate.
+- **Private vs. public tokens.** A **private** token is for server-side API calls — keep it secret; never put it in client-side code, a bundled env var, or a committed file. A **public** token is publicly readable and is what **every embedded component** uses to mount in the browser — all of them require the public token, never a private one (see `payabli-accept-payments`). Don't send a private token to the browser. This public/private split is separate from the OAuth2-vs-`requestToken` choice above: OAuth2 and `requestToken` are both server-side.
+- OAuth2 flow and credential management: https://docs.payabli.com/developers/oauth-authentication.md
+- Authentication overview (choosing a method): https://docs.payabli.com/developers/authentication.md
+- API tokens — types, scopes, and management: https://docs.payabli.com/developers/api-tokens.md
 
 ## ID hierarchy
 

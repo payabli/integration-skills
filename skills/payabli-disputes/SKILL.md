@@ -15,7 +15,7 @@ metadata:
 
 Handle money coming back out after the fact: chargebacks, ACH returns, and failed refunds.
 
-Disputes and returns **originate externally** — a cardholder or bank starts a chargeback, the processor returns an ACH debit. Through the API you can only **read and respond**, never create them. Read both through `GET /Query/chargebacks` (a record's `Method` and status distinguish a card chargeback from an ACH return). In sandbox, chargebacks are simulated by a manual import in the Payabli Portal. To simulate an ACH return, contact your Payabli Solution Engineer with the transaction IDs of the ACH transactions you want turned into returns — there's no self-serve API or Portal flow for it.
+Disputes and returns **originate externally** — a cardholder or bank starts a chargeback, the processor returns an ACH debit. Through the API you can only **read and respond**, never create them. Read both through `GET /Query/chargebacks` (a record's `Method` and status distinguish a card chargeback from an ACH return). To exercise this flow in sandbox, simulate a chargeback or ACH return first — see `payabli-testing`.
 
 ## Load fundamentals first
 
