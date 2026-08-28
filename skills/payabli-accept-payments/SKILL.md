@@ -53,7 +53,7 @@ PayMethod UI (a save-method-only lightbox) is also available, but it is less fle
 
 A one-time **sale** authorizes and captures in one call: `POST /v2/MoneyIn/getpaid`. Use the v2 endpoints — v1 is being deprecated. Send an `idempotencyKey` on this call (see `payabli-fundamentals`). https://docs.payabli.com/guides/pay-in-developer-transactions-create.md
 
-If a sandbox charge returns `E9999` ("Unexpected error"), it usually means the card isn't a valid Payabli test card — not an outage. Retry with a canonical test card from `payabli-testing`.
+If a sandbox charge returns `E9999` ("Unexpected error"), check the response before retrying: `cvvresponse: "N"` means a valid card with the wrong CVV (fix the CVV), otherwise the card likely isn't a valid Payabli test card — retry with a canonical one from `payabli-testing`.
 
 Separate **authorize** then **capture** when you must confirm before taking funds (for example, verifying availability or finalizing the amount). https://docs.payabli.com/guides/pay-in-developer-transactions-auth-capture.md
 

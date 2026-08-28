@@ -32,13 +32,13 @@ An event is queued and POSTed to your endpoint; **return HTTP 200 to acknowledge
 **Payabli does not sign webhook payloads.** There is no HMAC or signature to verify — do not implement signature verification. Authenticate incoming webhooks two ways instead:
 
 1. Set a custom `Authorization` header (via `webHeaderParameters`) when you create the notification, and check it on receipt.
-2. Allowlist Payabli's documented sending IP addresses (listed in the webhooks overview, and they differ by environment).
+2. Allowlist Payabli's documented sending IP addresses (listed under "IP addresses for webhook requests" in the notifications & webhooks overview: https://docs.payabli.com/guides/pay-ops-notifications-webhooks-overview.md; they differ by environment).
 
 `webHeaderParameters` lives inside `content` and is an array of `{key, value}` pairs. Payabli sends whatever you configure **verbatim** — there is no signing or token scheme, so the value is just your shared secret as-is (no `Bearer`/`Basic` prefix is required or interpreted). Check for the exact same string on receipt:
 
 ```json
 "content": {
-  "eventType": "ApprovedPayment",
+  "eventType": "approvedpayment",
   "webHeaderParameters": [
     { "key": "Authorization", "value": "<your-shared-secret>" }
   ]
@@ -59,11 +59,11 @@ Create a notification with `POST /Notification`:
 
 - `ownerType` — `0` for organization/partner, `2` for paypoint.
 - `ownerId` — the numeric ID of that owner: the `orgId` when `ownerType` is `0`, the `paypointId` when `ownerType` is `2`. This is the numeric entity ID, **not** the entrypoint alias used in URL paths.
-- `method: web`, `target` = your endpoint URL, `content.eventType` = the event to subscribe to, and `webHeaderParameters` for your auth header.
+- `method: web`, `target` = your endpoint URL, `content.eventType` = the event to subscribe to, and `webHeaderParameters` for your auth header. The subscription `eventType` is **lowercase** (`approvedpayment`); the delivered payload's `Event` field is **PascalCase** (`ApprovedPayment`) — match each exactly.
 
 https://docs.payabli.com/guides/pay-ops-developer-notifications-manage.md
 
-Event names and payload shapes: https://docs.payabli.com/guides/pay-ops-webhooks-payloads.md
+Event names and payload shapes: https://docs.payabli.com/developers/api-reference/webhooks-overview.md
 
 ## Local development
 
