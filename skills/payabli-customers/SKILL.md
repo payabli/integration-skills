@@ -31,13 +31,13 @@ Each paypoint keeps its own customer list — customers aren't shared across pay
 
 ## Create a customer
 
-`POST /Customer/single/{entry}`. The body is **flat** — `firstname`, `lastname`, `email`, and the rest sit at the top level, *not* wrapped in `customerData` the way the transaction endpoints nest them. Pass `replaceExisting: 1` to overwrite a matched record.
+`POST /Customer/single/{entry}`. The body is **flat** — `firstname`, `lastname`, `email`, and the rest sit at the top level, *not* wrapped in `customerData` the way the transaction endpoints nest them.
 
 **Custom identifiers drive matching — read the config before your first create.** A create or update must supply a value for at least one of the paypoint's configured identifier fields, named in an `identifierFields` array (reads and deletes use `customerId` in the path and don't need it). Which fields count is configured per paypoint, so pull them first with `GET /Paypoint/settings/{entry}` rather than assuming `email`/`customerNumber`; if the request supplies no value for any configured identifier, the call returns `400 Invalid customer identifiers`. When a paypoint has none configured, matching falls back to `customerNumber`. The configured set also decides whether a create dedupes onto an existing record or makes a new one. See `payabli-fundamentals` → Customer identifiers. https://docs.payabli.com/guides/pay-ops-developer-customers-manage.md
 
 **Casing gotcha:** requests take lowercase fields (`firstname`, `lastname`, `email`, `phone`, `address1`), but responses return them PascalCase (`Firstname`, `Lastname`, `Email`, `Phone`, `Address1`) alongside camelCase IDs (`customerId`, `customerNumber`, `customerStatus`). Map case-insensitively rather than assuming one casing across the round trip.
 
-**Response envelopes differ by operation — check the shape per call.** Create (`POST /Customer/single/{entry}`) returns `{ isSuccess, responseData }`; read (`GET /Customer/{customerId}`) returns the customer record **bare** (no wrapper); list (`GET /Query/customers/{entry}`) returns `{ Summary, Records }`. Don't assume a uniform envelope across the three.
+**Response envelopes differ by operation — check the shape per call.** Create (`POST /Customer/single/{entry}`) returns `{ isSuccess, responseData }` on HTTP 200, where `responseData` is the **full created customer record** (not just the id) — read the new id from `responseData.customerId`; read (`GET /Customer/{customerId}`) returns the customer record **bare** (no wrapper); list (`GET /Query/customers/{entry}`) returns `{ Summary, Records }`. Don't assume a uniform envelope across the three.
 
 ## Read, update, delete
 
