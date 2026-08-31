@@ -25,7 +25,7 @@ If `payabli-integration.md` exists at the repo root, read it; honor its `## SDK`
 
 ## Capture a bill
 
-Create a bill with `POST /Bill/single/{entry}` — identify the vendor by `vendorNumber` (required), plus amount, due date, and an optional bill image. A bill needs only a top-level `netAmount`; unlike invoices, line items aren't required. Bulk-import with `POST /Import/billsForm/{entry}`. https://docs.payabli.com/guides/pay-out-developer-bills-manage.md
+Create a bill with `POST /Bill/single/{entry}` — identify the vendor by `vendorNumber` (required), plus amount, due date, and an optional bill image. A bill needs only a top-level `netAmount`; unlike invoices, line items aren't required — but if you *do* send `billItems`, their `itemTotalAmount` must sum to `netAmount` exactly (the API adds nothing on top), or the create fails with `400` ("Sum of BillItems does not match Bill TotalAmount"). Bulk-import with `POST /Import/billsForm/{entry}`. https://docs.payabli.com/guides/pay-out-developer-bills-manage.md
 
 Set `status: 1` (Active) on create so the bill is immediately payout-eligible. `-99` is **Cancelled** — don't use it.
 
