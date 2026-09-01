@@ -23,7 +23,7 @@ jobs:
       # Pinned to a released tag for reproducibility + supply-chain safety — bump intentionally.
       - name: Install skill-validator
         run: |
-          go install github.com/agent-ecosystem/skill-validator/cmd/skill-validator@v1.5.6
+          go install github.com/agent-ecosystem/skill-validator/cmd/skill-validator@v1.6.1
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       # Structural gate: frontmatter, required fields, spec conformance, token limits.
