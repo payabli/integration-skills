@@ -38,6 +38,8 @@ For an **on-demand vCard** payout, set the authorize body's `paymentMethod.metho
 
 Authorize a payout with `POST /MoneyOut/authorize`. Note the asymmetry with Pay In: MoneyOut is **not versioned** (no `/v2`), unlike `/v2/MoneyIn/*`. One easy-to-miss gotcha: `invoiceData[].netAmount` here is a **string** (`"18.75"`), not a number as on `POST /Bill/single` — a numeric value returns HTTP 400, so follow the authorize reference. **`autoCapture: true` is the recommended approach** — it captures asynchronously after authorization, so the authorize response confirms only authorization; confirm capture via the `payout_transaction_approvedcaptured` webhook. Use `MoneyOut/captureAll` to capture many at once. When you render a payout's state, read the `PaymentStatus` string rather than the numeric `Status` (see `payabli-reporting`). https://docs.payabli.com/guides/pay-out-developer-payouts-manage.md
 
+For ACH payouts, `paymentMethod.achHolder` accepts **letters and spaces only** — digits, hyphens, or other special characters return `400 "Account holder name cannot contain special characters"`. Use the real account-holder name; don't reuse a tagged `vendorNumber` (like `acme-20260901-001`) as the holder.
+
 **Pay Out must be enabled on the paypoint, and only Payabli can enable it.** A `Missing Gateway Data ... group moneyout` error is **always** a configuration issue — Pay Out isn't enabled on the paypoint — and only Payabli can fix it. Contact the Payabli team to get Pay Out enabled.
 
 ## There are no Pay Out refunds
@@ -51,7 +53,7 @@ Create a vendor with `POST /Vendor/single/{entry}` — it returns the new vendor
 ## Other capabilities
 
 - Ghost cards (multi-use vCards): https://docs.payabli.com/guides/pay-out-developer-ghost-cards-manage.md
-- Vendor self-enrollment payment links: https://docs.payabli.com/guides/pay-out-developer-payment-links-manage.md
+- Vendor self-enrollment payment links — generate the link from the bill with `POST /PaymentLink/bill/{billId}`, then deliver it with `GET /PaymentLink/send/{payLinkId}?mail2=<email>`. `POST /PaymentLink/push` is **invoice-only** and returns `400 "Payment link must be for an invoice"` on a bill/payout link — use `send`, not `push`, for these. https://docs.payabli.com/guides/pay-out-developer-payment-links-manage.md
 - Positive Pay (check fraud control): https://docs.payabli.com/guides/pay-out-checks-positive-pay.md
 - Payout subscriptions (recurring payouts): https://docs.payabli.com/guides/pay-out-developer-payout-subscriptions-manage.md
 - ACH transfer returns: https://docs.payabli.com/guides/pay-ops-transfers-ach-returns.md

@@ -45,7 +45,9 @@ An event is queued and POSTed to your endpoint; **return HTTP 200 to acknowledge
 }
 ```
 
-For **local development only**, you can accept deliveries when no secret is configured, so a missing header doesn't block testing. In any deployed environment, fail closed: require the header and reject (and log) deliveries that don't match.
+Because Payabli echoes this header verbatim, the value on the subscription and the value your receiver checks must match exactly — use one secret for both. If they drift, deliveries still **reach** your endpoint but your receiver rejects them: a 403 that looks like a delivery failure even though the tunnel is fine.
+
+**Always return 200 — even on a bad or missing header.** The header check decides whether to *process* the event, not what HTTP status to return. A non-2xx makes Payabli retry and then mark the delivery failed, so you lose the event to your own auth. On a mismatch, log it and skip processing, but still return 200. Payabli doesn't require receiver auth, so treat the header as an advisory filter, not a gate on the response. (Accepting deliveries with no secret configured — for local development — is fine for the same reason.)
 
 For money-critical events, do not trust the payload alone: confirm by re-querying the transaction via the API (correlate on `transId`). This is the same discipline as idempotency in `payabli-fundamentals`.
 
@@ -67,7 +69,7 @@ Event names and payload shapes: https://docs.payabli.com/developers/api-referenc
 
 ## Local development
 
-Payabli must POST to a publicly reachable URL, so `localhost` won't receive deliveries. Expose your handler with a tunnel and set the notification `target` to the tunnel's public HTTPS URL plus your handler path. **localhost.run** is the lowest-friction option — no account or install, just SSH: `ssh -R 80:localhost:3000 nokey@localhost.run` prints a public HTTPS URL (use your handler's port). ngrok and cloudflared also work. The auth header travels in the subscription's `webHeaderParameters`, not in the request you make from your app. Redo two things when they change: if the tunnel URL rotates (it does each restart on the free tiers), update `target`; if you rotate the shared secret, update `webHeaderParameters` too — the secret is baked into the subscription, not read live.
+Payabli must POST to a publicly reachable URL, so `localhost` won't receive deliveries. Expose your handler with a tunnel and set the notification `target` to the tunnel's public HTTPS URL plus your handler path. **localhost.run** is one option — no account or install, just SSH: `ssh -R 80:localhost:3000 nokey@localhost.run` prints a public HTTPS URL (use your handler's port). ngrok and cloudflared also work. The auth header travels in the subscription's `webHeaderParameters`, not in the request you make from your app. Redo two things when they change: if the tunnel URL rotates (it does each restart on the free tiers), update `target`; if you rotate the shared secret, update `webHeaderParameters` too — the secret is baked into the subscription, not read live.
 
 Not every event can be triggered on demand in sandbox: payment-event webhooks fire when you run the transaction, but chargebacks, ACH returns, and similar require Payabli to trigger them (see `payabli-testing`).
 
