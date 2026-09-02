@@ -28,7 +28,7 @@ If `payabli-integration.md` exists at the repo root, read it; honor its `## SDK`
 
 ## Customer-facing payment links
 
-Generate a link from an invoice with `POST /PaymentLink/{idInvoice}`, then deliver it with `POST /PaymentLink/push/{payLinkId}` by email or SMS. The generate call takes a full page-configuration body and returns only the link id; assemble the URL as `https://app-sandbox.payabli.com/payment-link/{entry}/{payLinkId}` (`app.payabli.com` in production). Copy the guide's config example. https://docs.payabli.com/guides/pay-in-developer-payment-links-manage.md
+Generate a link from an invoice with `POST /PaymentLink/{idInvoice}`, then deliver it with `POST /PaymentLink/push/{payLinkId}` by email or SMS. `push` is **invoice-only** — payout/bill self-enrollment links generate from a bill and deliver via `GET /PaymentLink/send` instead (see `payabli-send-payments`). The generate call takes a full page-configuration body and returns only the link id; assemble the URL as `https://app-sandbox.payabli.com/payment-link/{entry}/{payLinkId}` (`app.payabli.com` in production). Copy the guide's config example. https://docs.payabli.com/guides/pay-in-developer-payment-links-manage.md
 
 ## Pay By SMS
 

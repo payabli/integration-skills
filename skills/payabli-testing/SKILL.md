@@ -29,6 +29,8 @@ Sandbox uses its own base URL, `https://api-sandbox.payabli.com/api`. Partners r
 
 Use Payabli's published test cards and test bank accounts — including cards that force a decline — rather than inventing values. https://docs.payabli.com/guides/test-accounts-reference.md
 
+For ACH payouts, the account-holder name (`achHolder`) accepts **letters and spaces only** — a value carrying digits or hyphens (for instance a tagged identifier reused as a name) fails with `400 "Account holder name cannot contain special characters"`. Use a plain name.
+
 ## What needs Payabli to trigger in sandbox
 
 Most of sandbox is self-serve, but a few things **can't be triggered on your own** — you have to ask your Payabli contact to fire them. This trips up integrators constantly, so plan for it: build and verify everything self-serve first, then batch the Payabli-side triggers with your contact rather than getting blocked mid-test.

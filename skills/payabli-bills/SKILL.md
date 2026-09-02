@@ -31,6 +31,8 @@ Set `status: 1` (Active) on create so the bill is immediately payout-eligible. `
 
 **Bill OCR is a standalone capture path** — Payabli's OCR engine extracts bill data (line items, amounts, vendor details) from a PDF or image. It is its own feature, not part of vendor enrichment. Extract via `POST /Import/ocrDocumentForm/{typeResult}` (multipart) or `/Import/ocrDocumentJson/{typeResult}` (base64), with `typeResult` set to `bill`. https://docs.payabli.com/guides/pay-ops-developer-ocr-use.md
 
+When you create a bill from an OCR result, **build the `POST /Bill/single` payload explicitly** from the fields you actually need — `billNumber`, `netAmount`, `dueDate` (plus any other dates), `vendorNumber`, and `status: 1`. Don't spread the raw OCR envelope (`responseData.resultData`, or the full response with attachments / `totalAmount` / `discount` / `billItems`) into the create call: the shapes don't line up, and you'll get `400 "field BillNumber empty"` or `400 "The sum of netAmount and discount is more than the total from the original bill"`. Map the extracted values onto a clean bill instead, keeping the `netAmount == sum(billItems)` rule above.
+
 ## List bills
 
 List bills with `GET /Query/bills/{entry}`. Filter by `vendorNumber(eq)` or `vendorId(eq)` — **`idVendor(eq)` is silently ignored and returns every bill**, so never use it to scope to a vendor. Query basics (filter syntax, pagination) → `payabli-reporting`.
