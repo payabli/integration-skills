@@ -25,13 +25,13 @@ If `payabli-integration.md` exists at the repo root, read it; honor its `## SDK`
 
 ## Capture a bill
 
-Create a bill with `POST /Bill/single/{entry}` — identify the vendor by `vendorNumber` (required), plus amount, due date, and an optional bill image. A bill needs only a top-level `netAmount`; unlike invoices, line items aren't required — but if you *do* send `billItems`, their `itemTotalAmount` must sum to `netAmount` exactly (the API adds nothing on top), or the create fails with `400` ("Sum of BillItems does not match Bill TotalAmount"). Bulk-import with `POST /Import/billsForm/{entry}`. https://docs.payabli.com/guides/pay-out-developer-bills-manage.md
+Create a bill with `POST /Bill/single/{entry}` — identify the vendor with a nested `vendor` object (`vendor: { vendorNumber }`) — a top-level `vendorNumber` is rejected. Plus amount, due date, and an optional bill image. A bill needs only a top-level `netAmount`; unlike invoices, line items aren't required — but if you *do* send `billItems`, their `itemTotalAmount` must sum to `netAmount` exactly (the API adds nothing on top), or the create fails with `400` ("Sum of BillItems does not match Bill TotalAmount"). Bulk-import with `POST /Import/billsForm/{entry}`. https://docs.payabli.com/guides/pay-out-developer-bills-manage.md
 
 Set `status: 1` (Active) on create so the bill is immediately payout-eligible. `-99` is **Cancelled** — don't use it.
 
 **Bill OCR is a standalone capture path** — Payabli's OCR engine extracts bill data (line items, amounts, vendor details) from a PDF or image. It is its own feature, not part of vendor enrichment. Extract via `POST /Import/ocrDocumentForm/{typeResult}` (multipart) or `/Import/ocrDocumentJson/{typeResult}` (base64), with `typeResult` set to `bill`. https://docs.payabli.com/guides/pay-ops-developer-ocr-use.md
 
-When you create a bill from an OCR result, **build the `POST /Bill/single` payload explicitly** from the fields you actually need — `billNumber`, `netAmount`, `dueDate` (plus any other dates), `vendorNumber`, and `status: 1`. Don't spread the raw OCR envelope (`responseData.resultData`, or the full response with attachments / `totalAmount` / `discount` / `billItems`) into the create call: the shapes don't line up, and you'll get `400 "field BillNumber empty"` or `400 "The sum of netAmount and discount is more than the total from the original bill"`. Map the extracted values onto a clean bill instead, keeping the `netAmount == sum(billItems)` rule above.
+When you create a bill from an OCR result, **build the `POST /Bill/single` payload explicitly** from the fields you actually need — `billNumber`, `netAmount`, `dueDate` (plus any other dates), the nested `vendor: { vendorNumber }`, and `status: 1`. Don't spread the raw OCR envelope (`responseData.resultData`, or the full response with attachments / `totalAmount` / `discount` / `billItems`) into the create call: the shapes don't line up, and you'll get `400 "field BillNumber empty"` or `400 "The sum of netAmount and discount is more than the total from the original bill"`. Map the extracted values onto a clean bill instead, keeping the `netAmount == sum(billItems)` rule above.
 
 ## List bills
 
@@ -39,7 +39,7 @@ List bills with `GET /Query/bills/{entry}`. Filter by `vendorNumber(eq)` or `ven
 
 ## Approve (optional)
 
-Approval is optional. A bill must be `Active` or `Approved` to be paid; a bill `Pending Approval` is blocked. Send for approval with `POST /Bill/approval/{idBill}` (body: a JSON array of approver emails, for example `["approver@example.com"]`); if an approver isn't a Payabli user yet, add `?autocreateUser=true` so the call creates them — without it the call returns `400 "Empty approvals"`. Then approve or reject with `GET /Bill/approval/{idBill}/{approved}`.
+Approval is optional. A bill must be `Active` or `Approved` to be paid; a bill `Pending Approval` is blocked. Send for approval with `POST /Bill/approval/{idBill}` (body: a JSON array of approver emails, for example `["approver@example.com"]`); if an approver isn't a Payabli user yet, add `?autocreateUser=true` so the call creates them — without it the call returns `400 "Empty approvals"`. Then approve or reject with `GET /Bill/approval/{idBill}/{approved}`, where `{approved}` is `true` or `false`.
 
 ## Pay the bill
 
