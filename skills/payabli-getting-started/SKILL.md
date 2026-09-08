@@ -36,7 +36,7 @@ Match the goal to the rows below. Fetch the linked `.md` page for depth, and han
 | Send invoices / payment links | Invoices and payment links | webhooks | `payabli-invoices` · https://docs.payabli.com/guides/pay-in-developer-invoices-manage.md |
 | Embedded checkout | Embedded components vs. hosted page (see Step 3) | tokenization | `payabli-accept-payments` · https://docs.payabli.com/guides/pay-in-components-overview.md |
 | Pay vendors / payouts | Pay Out (`/MoneyOut`) | vendors, webhooks | `payabli-send-payments` · https://docs.payabli.com/guides/pay-out-overview.md |
-| Automate bill pay / AP (incl. bill OCR) | Bills — bill capture (manual entry or OCR) and approval workflows | Pay Out to pay them | `payabli-bills` · https://docs.payabli.com/guides/pay-out-developer-bills-manage.md |
+| Automate bill pay / AP (incl. bill OCR) | Bills — bill capture (manual entry or OCR) | Pay Out to pay them | `payabli-bills` · https://docs.payabli.com/guides/pay-out-developer-bills-manage.md |
 | Real-time status updates | Webhooks (weigh against polling) | — | `payabli-webhooks` · https://docs.payabli.com/guides/pay-ops-notifications-webhooks-vs-polling.md |
 | Reports / reconciliation | Pay Ops reporting | — | `payabli-reporting` · https://docs.payabli.com/guides/pay-ops-overview.md |
 
