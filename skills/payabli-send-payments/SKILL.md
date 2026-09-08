@@ -62,5 +62,5 @@ Wire and RTP are on the roadmap — not yet generally available.
 
 ## Boundaries
 
-- AP automation (bills, bill OCR, approvals) → `payabli-bills`
+- AP automation (bills, bill OCR) → `payabli-bills`
 - Saving a vendor's method as a token → `payabli-tokenization`

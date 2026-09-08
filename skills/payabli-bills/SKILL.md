@@ -2,10 +2,9 @@
 name: payabli-bills
 description: >-
   Use when building accounts-payable automation on Payabli — capturing vendor
-  bills (manual entry or OCR), routing them through approval, and paying them
-  through Pay Out. Distinct from raw payouts (payabli-send-payments): a bill
-  starts with a vendor invoice that may need approval before payment. Reads
-  payabli-integration.md on load if present.
+  bills (manual entry or OCR) and paying them through Pay Out. Distinct from raw
+  payouts (payabli-send-payments): a bill is a captured vendor invoice that you
+  then pay. Reads payabli-integration.md on load if present.
 metadata:
   author: payabli
   version: "0.1"
@@ -13,7 +12,7 @@ metadata:
 
 # Payabli bills (AP automation)
 
-Capture vendor bills, approve them, and pay them.
+Capture vendor bills and pay them.
 
 ## Load fundamentals first
 
@@ -36,10 +35,6 @@ When you create a bill from an OCR result, **build the `POST /Bill/single` paylo
 ## List bills
 
 List bills with `GET /Query/bills/{entry}`. Filter by `vendorNumber(eq)` or `vendorId(eq)` — **`idVendor(eq)` is silently ignored and returns every bill**, so never use it to scope to a vendor. Query basics (filter syntax, pagination) → `payabli-reporting`.
-
-## Approve (optional)
-
-Approval is optional. A bill must be `Active` or `Approved` to be paid; a bill `Pending Approval` is blocked. Send for approval with `POST /Bill/approval/{idBill}` (body: a JSON array of approver emails, for example `["approver@example.com"]`); if an approver isn't a Payabli user yet, add `?autocreateUser=true` so the call creates them — without it the call returns `400 "Empty approvals"`. Then approve or reject with `GET /Bill/approval/{idBill}/{approved}`, where `{approved}` is `true` or `false`.
 
 ## Pay the bill
 

@@ -57,7 +57,7 @@ Payabli can auto-fill vendor payment and contact details from invoices and the w
 ## Boundaries
 
 - Creating and sending payouts → `payabli-send-payments`
-- Bill capture and AP approval flows → `payabli-bills`
+- Bill capture and AP automation → `payabli-bills`
 - Saving a payout method on a vendor → `payabli-tokenization`
 - Pay In customers (the customer equivalent of this skill) → `payabli-customers`
 - Query filter syntax, exports, and reconciliation → `payabli-reporting`
