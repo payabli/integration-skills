@@ -57,15 +57,14 @@ Retries and at-least-once delivery mean you will see duplicates. Dedupe on event
 
 ## Configure a subscription
 
-Create a notification with `POST /Notification`:
+Create a notification with `POST /Notification`. For the full request body, see https://docs.payabli.com/developers/api-reference/notification/add-notification.md. Watch for these:
 
-- `ownerType` — `0` for organization/partner, `2` for paypoint.
-- `ownerId` — the numeric ID of that owner: the `orgId` when `ownerType` is `0`, the `paypointId` when `ownerType` is `2`. This is the numeric entity ID, **not** the entrypoint alias used in URL paths.
-- `method: web`, `target` = your endpoint URL, `content.eventType` = the event to subscribe to, and `webHeaderParameters` for your auth header. The subscription `eventType` is **lowercase** (`approvedpayment`); the delivered payload's `Event` field is **PascalCase** (`ApprovedPayment`) — match each exactly.
+- For a webhook, set `method: web`, `target` to your endpoint URL, and `content.eventType` to the event to subscribe to.
+- `frequency` is required, and omitting it returns `400`. For an ongoing subscription, use `untilcancelled`.
+- `ownerId` is the numeric ID of the owner that `ownerType` names: the `orgId` for an organization (`ownerType: 0`), or the `paypointId` for a paypoint (`ownerType: 2`). Don't use the entrypoint name, the alias that appears in URL paths like `/Customer/single/{entry}`. A string value returns `400`.
+- The delivered payload's `Event` value can differ from the `eventType` you subscribe with, by case or by name, so route on the delivered value. For example, `payout_transaction_authorized` arrives as `PayOutAuthorized`. To find both names for any event, look it up in the event tables at https://docs.payabli.com/guides/pay-ops-notifications-webhooks-overview.md and open its payload page.
 
 https://docs.payabli.com/guides/pay-ops-developer-notifications-manage.md
-
-Event names and payload shapes: https://docs.payabli.com/developers/api-reference/webhooks-overview.md
 
 ## Local development
 
