@@ -31,13 +31,15 @@ Organized by what you're building, not by Payabli's product taxonomy.
 | `payabli-webhooks` | Webhook handling and event processing |
 | `payabli-tokenization` | Saved payment methods (Pay In and Pay Out) |
 | `payabli-reporting` | Query API for reports and list/detail data UIs, reconciliation, settlement tracking |
+| `payabli-boarding` | Merchant onboarding through intelligent boarding (beta): records, applications, validate, submit, status |
+| `payabli-boarding-migration` | Moving an integration off the legacy boarding endpoints onto intelligent boarding (beta) |
 | `payabli-testing` | Sandbox usage, test data, and event simulation |
 | `payabli-certification-prep` | Rehearse the certification test scenarios in sandbox before the cert call |
 | `payabli-mcp-setup` | Installs the official Payabli Docs MCP server |
 
 Every skill above is live. New skills start with `payabli-getting-started`, which loads `payabli-fundamentals` and pulls in the rest as the work calls for them.
 
-> We're adding skills over time, so some Payabli capabilities don't have one yet — for example **merchant boarding** (onboarding merchants).
+> We're adding skills over time, so some Payabli capabilities don't have one yet.
 
 ## What you'll need
 
