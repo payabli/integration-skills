@@ -39,8 +39,8 @@ Match the goal to the rows below. Fetch the linked `.md` page for depth, and han
 | Automate bill pay / AP (incl. bill OCR) | Bills — bill capture (manual entry or OCR) | Pay Out to pay them | `payabli-bills` · https://docs.payabli.com/guides/pay-out-developer-bills-manage.md |
 | Real-time status updates | Webhooks (weigh against polling) | — | `payabli-webhooks` · https://docs.payabli.com/guides/pay-ops-notifications-webhooks-vs-polling.md |
 | Reports / reconciliation | Pay Ops reporting | — | `payabli-reporting` · https://docs.payabli.com/guides/pay-ops-overview.md |
-
-**Not yet covered:** API merchant boarding (creating and submitting paypoint applications) is coming in a future release. If the partner's goal is onboarding merchants, tell them it's not yet available as a skill and route them to their Payabli contact.
+| Onboard merchants through the API | Intelligent boarding (beta, opt-in) — business, paypoint, people, bank accounts, application | webhooks and polling for status | `payabli-boarding` · https://docs.payabli.com/guides/pay-ops-boarding-object-model-overview.md |
+| Move an integration off legacy boarding | Intelligent boarding migration | — | `payabli-boarding-migration` · https://docs.payabli.com/guides/pay-ops-developer-boarding-legacy-migrate.md |
 
 ## Step 3 — Recommend best practice; stay neutral on genuine choices
 
