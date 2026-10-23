@@ -36,7 +36,7 @@ Vendors are the entities that get paid in Pay Out. Each paypoint keeps its own v
 
 **Address is all-or-nothing.** If you send any address field, the full set (`address1`, `city`, `state`, `zip`) must be present and valid; the primary address and the remittance address are validated independently. `state` is checked against `country` (`US` states or `CA` provinces only).
 
-**Casing gotcha:** requests take lowercase fields (`vendorNumber`, `name1`, `email`, `phone`, `address1`), but responses return them PascalCase (`VendorNumber`, `Name1`, `Email`, `Address1`, `VendorId`). Vendor status has three forms depending on context — the request field is `vendorStatus`, the query filter is `status`, and the response field is `VendorStatus`. Map case-insensitively rather than assuming one casing.
+**Casing gotcha:** requests take lowercase fields (`vendorNumber`, `name1`, `email`, `phone`, `address1`). Responses return most fields PascalCase (`VendorNumber`, `Name1`, `Email`, `Address1`, `VendorId`), but some stay camelCase (`additionalData`, `customField1`, `payeeName1`, `remitAddress1`). Vendor status has three forms depending on context — the request field is `vendorStatus`, the query filter is `status`, and the response field is `VendorStatus`. Map case-insensitively rather than assuming one casing.
 
 ## Read, update, delete
 
